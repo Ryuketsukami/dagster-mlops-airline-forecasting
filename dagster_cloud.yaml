@@ -1,0 +1,5 @@
+locations:
+- code_source:
+    module_name: quickstart_etl.definitions
+  location_name: portfolio_demand_forecasting_and_dynamic_pricing
+  working_directory: ./src/
