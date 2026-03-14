@@ -5,10 +5,46 @@ version = "0.1.0"
 dependencies = [
     "dagster",
     "dagster-cloud",
+    "dagster-gcp",
+    "dagster-dbt",
+    "dagster-mlflow",
+    "dagster-docker",
+    "dask[complete]",
+    "dask-bigquery",
+    "pyarrow",
     "boto3",
     "pandas",
     "matplotlib",
+    "scikit-learn",
+    "google-cloud-bigquery",
+    "google-cloud-storage",
+    "lightgbm",
+    "xgboost",
+    "tensorflow",
+    "mlflow",
+    "optuna",
+    "great-expectations",
+    "pandera",
+    "feast[gcp]",
+    "tsfresh",
+    "holidays",
+    "fastapi",
+    "uvicorn",
+    "gunicorn", # production ASGI server
+    "evidently", # data drift and prediction drift detection
+    "prometheus-client", # exposing metrics for monitoring
+    "pre-commit", # git hooks for linting and formatting
+    "ruff", # linter and formatter
+    "dvc[gs]", # data version control with Google Cloud Storage support
 ]
+
+# Gcloud CLI
+# google kubernetes engine (gke)
+# Vertex AI (vertex)
+# grafana (docker or gcp marketplace)
+# github-actions (for CI/CD)
+# terraform (for infrastructure as code)
+
 
 [dependency-groups]
 dev = [

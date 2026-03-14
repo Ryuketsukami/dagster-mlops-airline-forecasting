@@ -1,0 +1,1 @@
+we need unit testing to test components and integration tests to make sure that the whole thing works
