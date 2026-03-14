@@ -228,3 +228,6 @@ pytest tests
 ```
 # Big Query
 ## https://console.cloud.google.com/bigquery/overview?project=mevi-353402
+
+# Medallion architecture
+https://www.youtube.com/watch?v=8p77fOWp5F4

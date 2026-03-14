@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+    paths-ignore:
+      - "docs/**"
+      - "infra/**"
+      - "README.md"
+  pull_request:
+    branches: ["main"]
+
+concurrency:
+  group: ${{ github.ref }}/ci
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.10"
+
+jobs:
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Ruff lint
+        run: uv run ruff check .
+
+      - name: Ruff format check
+        run: uv run ruff format --check .
+
+  test:
+    name: Tests
+    runs-on: ubuntu-22.04
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Run tests
+        run: uv run pytest tests/ -v --tb=short
+        env:
+          # Only what tests actually need — fake values are fine
+          # because unit tests should use mocked resources
+          DAGSTER_HOME: /tmp/dagster_home
+          GCP_PROJECT_ID: "test-project"
+          GCS_BUCKET_NAME: "test-bucket"
+          BIGQUERY_DATASET: "test_dataset"
+          BIGQUERY_LOCATION: "US"
+          MLFLOW_TRACKING_URI: "sqlite:///tmp/mlflow.db"
+          MLFLOW_EXPERIMENT_NAME: "test"
+          MLFLOW_MODEL_NAME: "test-model"
+
+  validate-definitions:
+    name: Validate Dagster Definitions
+    runs-on: ubuntu-22.04
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Validate Dagster definitions
+        run: uv run dagster definitions validate -m quickstart_etl.definitions
+        env:
+          DAGSTER_HOME: /tmp/dagster_home
+          # Use dummy values — validate just checks that
+          # definitions load without import errors,
+          # it doesn't actually connect to anything
+          GCP_PROJECT_ID: "test-project"
+          GCS_BUCKET_NAME: "test-bucket"
+          BIGQUERY_DATASET: "test_dataset"
+          BIGQUERY_LOCATION: "EU"
+          MLFLOW_TRACKING_URI: "sqlite:///tmp/mlflow.db"
+          MLFLOW_EXPERIMENT_NAME: "test"
+          MLFLOW_MODEL_NAME: "test-model"

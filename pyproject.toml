@@ -79,7 +79,7 @@ ignore = ["E501"]
 known-first-party = ["quickstart_etl"]
 
 [tool.pytest.ini_options]
-testpaths = ["src"]
+testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]

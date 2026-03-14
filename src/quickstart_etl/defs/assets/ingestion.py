@@ -20,19 +20,27 @@ def raw_flight_data() -> None:
 
 
 # Ingests external data: holiday calendars, historical weather, currency rates, stores in GCS nbucket. Returns a reference to the GCS path.
-@asset(group_name="ingestion", kinds=["python"], partitions_def=partitions_def)
+@asset(group_name="ingestion", kinds=["python", "raw", "gcs", "api"], partitions_def=partitions_def)
 def raw_external_signals() -> None:
     return None
 
 
 # Loads raw flight data from GCS into BigQuery Bronze table, Uses dagster-gcp BigQuery IO manager. Returns a reference to the BigQuery table.
-@asset(group_name="ingestion", kinds=["python"], partitions_def=partitions_def)
+@asset(
+    group_name="ingestion",
+    kinds=["python", "raw", "gcs", "api", "bigquery", "io-manager"],
+    partitions_def=partitions_def,
+)
 def bronze_flights() -> None:
     return None
 
 
 # Loads raw external signals from GCS into BigQuery Bronze table, Uses dagster-gcp BigQuery IO manager. Returns a reference to the BigQuery table.
-@asset(group_name="ingestion", kinds=["python"], partitions_def=partitions_def)
+@asset(
+    group_name="ingestion",
+    kinds=["python", "raw", "gcs", "api", "bigquery", "io-manager"],
+    partitions_def=partitions_def,
+)
 def bronze_external() -> None:
     return None
 

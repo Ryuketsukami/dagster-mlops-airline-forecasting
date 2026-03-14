@@ -5,10 +5,11 @@
 
 from dagster import Definitions, load_assets_from_modules
 
-from .assets import features, ingestion, monitoring, serving, training, validation
-from .jobs import retrain_job
-from .schedules import daily_schedule, retraining_schedule
-from .sensors.drift_sensor import drift_retrain_sensor
+from .defs.assets import features, ingestion, monitoring, serving, training, validation
+from .defs.jobs import retrain_job
+from .defs.resources.storage import bigquery_io_manager, bigquery_resource
+from .defs.schedules import daily_schedule, retraining_schedule
+from .defs.sensors.drift_sensors import drift_retrain_sensor
 
 all_assets = load_assets_from_modules(
     [ingestion, validation, features, training, serving, monitoring]
@@ -16,7 +17,10 @@ all_assets = load_assets_from_modules(
 
 defs = Definitions(
     assets=all_assets,
-    resources={...},
+    resources={
+        "bigquery": bigquery_resource,
+        "io_manager": bigquery_io_manager,
+    },
     schedules=[daily_schedule, retraining_schedule],
     sensors=[drift_retrain_sensor],
     jobs=[retrain_job],
@@ -36,7 +40,7 @@ defs = Definitions(
 # )
 # from dagster._core.definitions.metadata.source_code import AnchorBasedFilePathMapping
 
-# from .defs.assets import most_frequent_words, topstories, topstory_ids
+# from .defs.assets import ingestion, validation, features, training, serving, monitoring
 
 # daily_refresh_schedule = ScheduleDefinition(
 #     job=define_asset_job(name="all_assets_job"), cron_schedule="0 0 * * *"
