@@ -1,5 +1,7 @@
 locations:
-- code_source:
+- location_name: portfolio_demand_forecasting_and_dynamic_pricing
+  code_source:
     module_name: quickstart_etl.definitions
-  location_name: portfolio_demand_forecasting_and_dynamic_pricing
-  working_directory: ./src/
+  working_directory: /app/src
+  build:
+    directory: .   # Dockerfile is at the repo root
