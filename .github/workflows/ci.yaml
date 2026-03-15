@@ -133,10 +133,9 @@ jobs:
 
       - name: Deploy to Dagster+ Serverless
         run: |
-          dagster-cloud serverless deploy \
+          dagster-cloud serverless deploy . \
             --location-name portfolio_demand_forecasting_and_dynamic_pricing \
             --module-name quickstart_etl.definitions \
             --working-directory ./src \
-            --python-version ${{ env.PYTHON_VERSION }} \
             --deployment prod
 
