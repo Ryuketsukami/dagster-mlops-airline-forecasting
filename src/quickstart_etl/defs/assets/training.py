@@ -1,9 +1,9 @@
 """
-Training layer — LightGBM model training with Optuna HPO.
+Training layer — HistGradientBoostingRegressor with Optuna HPO.
 
 Assets (not partitioned — each runs on the full dataset):
     training_dataset   — build + split features, write train/val/test Parquets to GCS
-    trained_model      — Optuna HPO (50 trials) → best LightGBM, saved to GCS
+    trained_model      — Optuna HPO (50 trials) → best HGBR, saved to GCS
     model_evaluation   — MAE / RMSE / R² / directional accuracy on test set, logged as Dagster metadata
     champion_model     — compare vs current champion by RMSE; promote if better
 """
@@ -13,13 +13,10 @@ import json
 import os
 import pickle
 
-import lightgbm as lgb
 import numpy as np
-import optuna
 import pandas as pd
 from dagster import AssetExecutionContext, MaterializeResult, MetadataValue, asset
 from dagster_gcp import BigQueryResource, GCSResource
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 # ---------------------------------------------------------------------------
 # Fixed GCS artifact paths (overwritten each training run)
@@ -44,14 +41,11 @@ _TEST_START = "2025-07-01"
 # Columns excluded from the feature matrix
 _EXCLUDE_COLS = frozenset({"date", "ticker", "target_return", "actual_date"})
 
-# LightGBM fixed hyper-parameters (non-tunable)
-_LGBM_FIXED = {
-    "objective": "regression",
-    "metric": "rmse",
-    "boosting_type": "gbdt",
-    "n_jobs": -1,
-    "verbose": -1,
+# HistGradientBoostingRegressor fixed hyper-parameters (non-tunable)
+_HGBR_FIXED = {
+    "loss": "squared_error",
     "random_state": 42,
+    "early_stopping": False,  # we evaluate manually against held-out val split
 }
 
 # ---------------------------------------------------------------------------
@@ -160,7 +154,7 @@ def training_dataset(
 @asset(
     group_name="training",
     deps=["training_dataset"],
-    kinds=["lightgbm", "optuna", "gcs"],
+    kinds=["sklearn", "optuna", "gcs"],
 )
 def trained_model(
     context: AssetExecutionContext,
@@ -168,9 +162,14 @@ def trained_model(
 ) -> MaterializeResult:
     """Run 50-trial Optuna HPO on the training split; train final model on best params.
 
+    Uses HistGradientBoostingRegressor — equivalent to LightGBM but pure Python/C++,
+    no OpenMP system library required (compatible with Dagster+ Serverless).
     Best model + feature column list are saved to GCS under models/latest/.
-    All Optuna best params and val RMSE are surfaced as Dagster asset metadata.
     """
+    import optuna  # lazy — avoid import-time overhead on Serverless
+    from sklearn.ensemble import HistGradientBoostingRegressor  # lazy
+    from sklearn.metrics import mean_squared_error  # lazy
+
     bucket_name = os.environ["GCS_BUCKET_NAME"]
     gcs_client = gcs_resource.get_client()
 
@@ -195,44 +194,32 @@ def trained_model(
 
     def _objective(trial: optuna.Trial) -> float:
         params = {
-            **_LGBM_FIXED,
-            "n_estimators": trial.suggest_int("n_estimators", 200, 2000),
+            **_HGBR_FIXED,
+            "max_iter": trial.suggest_int("max_iter", 200, 2000),
             "learning_rate": trial.suggest_float("learning_rate", 1e-3, 0.3, log=True),
-            "num_leaves": trial.suggest_int("num_leaves", 20, 300),
+            "max_leaf_nodes": trial.suggest_int("max_leaf_nodes", 20, 300),
             "max_depth": trial.suggest_int("max_depth", 3, 12),
-            "min_child_samples": trial.suggest_int("min_child_samples", 5, 100),
-            "subsample": trial.suggest_float("subsample", 0.5, 1.0),
-            "colsample_bytree": trial.suggest_float("colsample_bytree", 0.5, 1.0),
-            "reg_alpha": trial.suggest_float("reg_alpha", 1e-8, 10.0, log=True),
-            "reg_lambda": trial.suggest_float("reg_lambda", 1e-8, 10.0, log=True),
+            "min_samples_leaf": trial.suggest_int("min_samples_leaf", 5, 100),
+            "l2_regularization": trial.suggest_float("l2_regularization", 1e-8, 10.0, log=True),
+            "max_features": trial.suggest_float("max_features", 0.5, 1.0),
         }
-        model = lgb.LGBMRegressor(**params)
-        model.fit(
-            X_train,
-            y_train,
-            eval_set=[(X_val, y_val)],
-            callbacks=[lgb.early_stopping(50, verbose=False), lgb.log_evaluation(-1)],
-        )
+        model = HistGradientBoostingRegressor(**params)
+        model.fit(X_train, y_train)
         preds = model.predict(X_val)
         return float(np.sqrt(mean_squared_error(y_val, preds)))
 
-    study = optuna.create_study(direction="minimize", study_name="lgbm_airline_return")
+    study = optuna.create_study(direction="minimize", study_name="hgbr_airline_return")
     study.optimize(_objective, n_trials=50, show_progress_bar=False)
 
     context.log.info(f"Best val RMSE: {study.best_value:.6f}  params: {study.best_params}")
 
     # Train final model with best params on full train+val combined for max data
-    best_params = {**_LGBM_FIXED, **study.best_params}
+    best_params = {**_HGBR_FIXED, **study.best_params}
     X_full = np.vstack([X_train, X_val])
     y_full = np.concatenate([y_train, y_val])
 
-    final_model = lgb.LGBMRegressor(**best_params)
-    final_model.fit(
-        X_full,
-        y_full,
-        eval_set=[(X_val, y_val)],
-        callbacks=[lgb.early_stopping(50, verbose=False), lgb.log_evaluation(-1)],
-    )
+    final_model = HistGradientBoostingRegressor(**best_params)
+    final_model.fit(X_full, y_full)
 
     # Persist model + feature column list
     _upload(gcs_client, bucket_name, _MODEL_PATH, pickle.dumps(final_model))
@@ -250,12 +237,12 @@ def trained_model(
             "val_rmse": MetadataValue.float(study.best_value),
             "n_trials": MetadataValue.int(50),
             "n_features": MetadataValue.int(len(feature_cols)),
-            "best_n_estimators": MetadataValue.int(bp.get("n_estimators", 0)),
+            "best_max_iter": MetadataValue.int(bp.get("max_iter", 0)),
             "best_learning_rate": MetadataValue.float(bp.get("learning_rate", 0.0)),
-            "best_num_leaves": MetadataValue.int(bp.get("num_leaves", 0)),
+            "best_max_leaf_nodes": MetadataValue.int(bp.get("max_leaf_nodes", 0)),
             "best_max_depth": MetadataValue.int(bp.get("max_depth", 0)),
-            "best_subsample": MetadataValue.float(bp.get("subsample", 0.0)),
-            "best_colsample_bytree": MetadataValue.float(bp.get("colsample_bytree", 0.0)),
+            "best_l2_regularization": MetadataValue.float(bp.get("l2_regularization", 0.0)),
+            "best_max_features": MetadataValue.float(bp.get("max_features", 0.0)),
             "gcs_model_path": MetadataValue.text(f"gs://{bucket_name}/{_MODEL_PATH}"),
         }
     )
@@ -289,6 +276,9 @@ def model_evaluation(
     if not model_bytes or not test_bytes or not feature_cols_bytes:
         raise ValueError("Model or test artifacts missing in GCS — run trained_model first.")
 
+    from sklearn.inspection import permutation_importance  # lazy
+    from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score  # lazy
+
     model = pickle.loads(model_bytes)
     test_df = pd.read_parquet(io.BytesIO(test_bytes))
     feature_cols: list[str] = json.loads(feature_cols_bytes)
@@ -303,7 +293,9 @@ def model_evaluation(
     r2 = float(r2_score(y_test, preds))
     directional_accuracy = float(np.mean(np.sign(preds) == np.sign(y_test)))
 
-    importances = dict(zip(feature_cols, model.feature_importances_.tolist()))
+    # HistGradientBoostingRegressor has no feature_importances_; use permutation importance
+    perm = permutation_importance(model, X_test, y_test, n_repeats=5, random_state=42, n_jobs=-1)
+    importances = dict(zip(feature_cols, perm.importances_mean.tolist()))
     top_features = sorted(importances.items(), key=lambda x: -x[1])[:20]
 
     eval_report = {

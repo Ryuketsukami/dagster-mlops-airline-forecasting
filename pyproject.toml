@@ -20,8 +20,6 @@ dependencies = [
     "scikit-learn",
     "google-cloud-bigquery",
     "google-cloud-storage",
-    "lightgbm",
-    "xgboost",
     "tensorflow",
     "mlflow",
     "optuna",
