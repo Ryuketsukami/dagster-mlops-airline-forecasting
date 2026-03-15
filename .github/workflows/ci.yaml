@@ -104,3 +104,22 @@ jobs:
           BIGQUERY_DATASET: "test_dataset"
           BIGQUERY_LOCATION: "EU"
 
+  # ── 4. Deploy to Dagster+ Serverless (main branch only) ────────────────────
+  # dagster-cloud-action reads dagster_cloud.yaml and builds a PEX for Serverless.
+  # No custom Docker image — Dagster manages the execution environment.
+  deploy:
+    name: Deploy to Dagster+ Serverless
+    runs-on: ubuntu-22.04
+    needs: [test, validate-definitions]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy code location
+        uses: dagster-io/dagster-cloud-action@v0.1
+        with:
+          dagster_cloud_api_token: ${{ secrets.DAGSTER_CLOUD_API_TOKEN }}
+          organization_id: mevmav
+          deployment: prod
+          python_version: ${{ env.PYTHON_VERSION }}
+
