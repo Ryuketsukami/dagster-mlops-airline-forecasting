@@ -1127,55 +1127,6 @@ wheels = [
 ]
 
 [[package]]
-name = "dagster-cloud"
-version = "1.11.11"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version < '3.11'",
-]
-dependencies = [
-    { name = "dagster", version = "1.11.11", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "dagster-cloud-cli", version = "1.11.11", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "dagster-shared", version = "1.11.11", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "opentelemetry-api", marker = "python_full_version < '3.11'" },
-    { name = "opentelemetry-exporter-otlp-proto-grpc", marker = "python_full_version < '3.11'" },
-    { name = "opentelemetry-exporter-otlp-proto-http", marker = "python_full_version < '3.11'" },
-    { name = "opentelemetry-sdk", marker = "python_full_version < '3.11'" },
-    { name = "pex", marker = "python_full_version < '3.11'" },
-    { name = "questionary", marker = "python_full_version < '3.11'" },
-    { name = "requests", marker = "python_full_version < '3.11'" },
-    { name = "typer", marker = "python_full_version < '3.11'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/80/ae/3f99b47243050d8c5b704fa0a4f8d3af40d40ce0bf601ee517dace818bb9/dagster_cloud-1.11.11.tar.gz", hash = "sha256:76ecc7fe1086d9bc8e642e3bf0773147cf96840471b44813877607e939ec55a8", size = 169584, upload-time = "2025-09-18T20:34:56.603Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/08/f1/6306d1ba5296720669f252a141c97c4cb3bcb9d659efd6c3e08dc2d07da4/dagster_cloud-1.11.11-py3-none-any.whl", hash = "sha256:bd9ea813f8addeb8d85787db9401dbb73005a0d588f657ef0faab16824301140", size = 209439, upload-time = "2025-09-18T20:34:55.065Z" },
-]
-
-[[package]]
-name = "dagster-cloud"
-version = "1.12.19"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.14'",
-    "python_full_version == '3.13.*'",
-    "python_full_version == '3.12.*'",
-    "python_full_version == '3.11.*'",
-]
-dependencies = [
-    { name = "dagster", version = "1.12.19", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "dagster-cloud-cli", version = "1.12.19", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "dagster-shared", version = "1.12.19", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "pex", marker = "python_full_version >= '3.11'" },
-    { name = "questionary", marker = "python_full_version >= '3.11'" },
-    { name = "requests", marker = "python_full_version >= '3.11'" },
-    { name = "typer", marker = "python_full_version >= '3.11'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/33/af/40ba975992f8a7d15a40252427345c6a9534e99f221bdfd11b4cc4ea828b/dagster_cloud-1.12.19.tar.gz", hash = "sha256:aad2ea10261d3c658ac17520c802ef50a7560b88f692069590976a0a5b4c439f", size = 402830, upload-time = "2026-03-12T17:40:24.264Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/8c/c9/49434d4440018f2edf4a7781fc26fc238b756284460348bc0c9fa18ad3ac/dagster_cloud-1.12.19-py3-none-any.whl", hash = "sha256:90114b312c67e9e560861e52696296a2c2960e605ecdadad2ea9fa663d9cf033", size = 193538, upload-time = "2026-03-12T17:40:22.676Z" },
-]
-
-[[package]]
 name = "dagster-cloud-cli"
 version = "1.11.11"
 source = { registry = "https://pypi.org/simple" }
@@ -5304,54 +5255,6 @@ wheels = [
 ]
 
 [[package]]
-name = "opentelemetry-exporter-otlp-proto-common"
-version = "1.37.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "opentelemetry-proto", marker = "python_full_version < '3.11'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/dc/6c/10018cbcc1e6fff23aac67d7fd977c3d692dbe5f9ef9bb4db5c1268726cc/opentelemetry_exporter_otlp_proto_common-1.37.0.tar.gz", hash = "sha256:c87a1bdd9f41fdc408d9cc9367bb53f8d2602829659f2b90be9f9d79d0bfe62c", size = 20430, upload-time = "2025-09-11T10:29:03.605Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/08/13/b4ef09837409a777f3c0af2a5b4ba9b7af34872bc43609dda0c209e4060d/opentelemetry_exporter_otlp_proto_common-1.37.0-py3-none-any.whl", hash = "sha256:53038428449c559b0c564b8d718df3314da387109c4d36bd1b94c9a641b0292e", size = 18359, upload-time = "2025-09-11T10:28:44.939Z" },
-]
-
-[[package]]
-name = "opentelemetry-exporter-otlp-proto-grpc"
-version = "1.37.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "googleapis-common-protos", marker = "python_full_version < '3.11'" },
-    { name = "grpcio", version = "1.75.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "opentelemetry-api", marker = "python_full_version < '3.11'" },
-    { name = "opentelemetry-exporter-otlp-proto-common", marker = "python_full_version < '3.11'" },
-    { name = "opentelemetry-proto", marker = "python_full_version < '3.11'" },
-    { name = "opentelemetry-sdk", marker = "python_full_version < '3.11'" },
-    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/d1/11/4ad0979d0bb13ae5a845214e97c8d42da43980034c30d6f72d8e0ebe580e/opentelemetry_exporter_otlp_proto_grpc-1.37.0.tar.gz", hash = "sha256:f55bcb9fc848ce05ad3dd954058bc7b126624d22c4d9e958da24d8537763bec5", size = 24465, upload-time = "2025-09-11T10:29:04.172Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/39/17/46630b74751031a658706bef23ac99cdc2953cd3b2d28ec90590a0766b3e/opentelemetry_exporter_otlp_proto_grpc-1.37.0-py3-none-any.whl", hash = "sha256:aee5104835bf7993b7ddaaf380b6467472abaedb1f1dbfcc54a52a7d781a3890", size = 19305, upload-time = "2025-09-11T10:28:45.776Z" },
-]
-
-[[package]]
-name = "opentelemetry-exporter-otlp-proto-http"
-version = "1.37.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "googleapis-common-protos", marker = "python_full_version < '3.11'" },
-    { name = "opentelemetry-api", marker = "python_full_version < '3.11'" },
-    { name = "opentelemetry-exporter-otlp-proto-common", marker = "python_full_version < '3.11'" },
-    { name = "opentelemetry-proto", marker = "python_full_version < '3.11'" },
-    { name = "opentelemetry-sdk", marker = "python_full_version < '3.11'" },
-    { name = "requests", marker = "python_full_version < '3.11'" },
-    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/5d/e3/6e320aeb24f951449e73867e53c55542bebbaf24faeee7623ef677d66736/opentelemetry_exporter_otlp_proto_http-1.37.0.tar.gz", hash = "sha256:e52e8600f1720d6de298419a802108a8f5afa63c96809ff83becb03f874e44ac", size = 17281, upload-time = "2025-09-11T10:29:04.844Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/e9/e9/70d74a664d83976556cec395d6bfedd9b85ec1498b778367d5f93e373397/opentelemetry_exporter_otlp_proto_http-1.37.0-py3-none-any.whl", hash = "sha256:54c42b39945a6cc9d9a2a33decb876eabb9547e0dcb49df090122773447f1aef", size = 19576, upload-time = "2025-09-11T10:28:46.726Z" },
-]
-
-[[package]]
 name = "opentelemetry-proto"
 version = "1.37.0"
 source = { registry = "https://pypi.org/simple" }
@@ -5760,15 +5663,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/bd/a0/307e09edfae54f103d66b54d82fdfd22cfc25e733731c97173f4ec661fc3/peewee-4.0.1.tar.gz", hash = "sha256:beb1a173a52952a4d69197ca36408166740b2ced339c0e8159617c3fa1e1c4da", size = 700753, upload-time = "2026-03-01T17:26:56.125Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/bf/99/0f8d9e46df9812ab31dadb07ba304c3ff6d6076bf19a67f4d046790be2e1/peewee-4.0.1-py3-none-any.whl", hash = "sha256:10afaa02c9f6d0f2dfe0f5b9007075c985eb141ab740a8831e37be2a61b3595c", size = 139369, upload-time = "2026-03-01T17:26:54.597Z" },
-]
-
-[[package]]
-name = "pex"
-version = "2.58.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/08/8c/15b6354168c5b15eacb2b29511c2973bf6b49fd13e164142b4da9489c955/pex-2.58.1.tar.gz", hash = "sha256:e53313a979aa1ad6a15035de9c3f5f99f1d82615eba24b80f6d48cd0c561ab71", size = 5125656, upload-time = "2025-09-19T12:57:19.93Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/6e/6a/7eb91c00539e77e9124f7cc258ef7b227717bd9c57f69e34b3cc08e3c386/pex-2.58.1-py2.py3-none-any.whl", hash = "sha256:c9135931a0443a29cd904e1c5a228d5da711a92ed3fa9ff14a6784d182637a83", size = 3864055, upload-time = "2025-09-19T12:57:17.369Z" },
 ]
 
 [[package]]
@@ -6769,8 +6663,6 @@ dependencies = [
     { name = "boto3" },
     { name = "dagster", version = "1.11.11", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "dagster", version = "1.12.19", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "dagster-cloud", version = "1.11.11", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "dagster-cloud", version = "1.12.19", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "dagster-dbt", version = "0.27.11", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "dagster-dbt", version = "0.28.19", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "dagster-docker", version = "0.27.11", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
@@ -6783,7 +6675,6 @@ dependencies = [
     { name = "dagster-mlflow", version = "0.28.19", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "dask", extra = ["complete"] },
     { name = "dask-bigquery" },
-    { name = "dvc", extra = ["gs"] },
     { name = "evidently" },
     { name = "fastapi" },
     { name = "feast", extra = ["gcp"] },
@@ -6799,10 +6690,8 @@ dependencies = [
     { name = "optuna" },
     { name = "pandas" },
     { name = "pandera" },
-    { name = "pre-commit" },
     { name = "prometheus-client" },
     { name = "pyarrow" },
-    { name = "ruff" },
     { name = "scikit-learn", version = "1.7.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "scikit-learn", version = "1.8.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "tensorflow" },
@@ -6818,14 +6707,16 @@ dev = [
     { name = "dagster-dg-cli", version = "1.12.19", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "dagster-webserver", version = "1.11.11", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "dagster-webserver", version = "1.12.19", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "dvc", extra = ["gs"] },
+    { name = "pre-commit" },
     { name = "pytest" },
+    { name = "ruff" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "boto3" },
     { name = "dagster" },
-    { name = "dagster-cloud" },
     { name = "dagster-dbt" },
     { name = "dagster-docker" },
     { name = "dagster-gcp" },
@@ -6833,7 +6724,6 @@ requires-dist = [
     { name = "dagster-mlflow" },
     { name = "dask", extras = ["complete"] },
     { name = "dask-bigquery" },
-    { name = "dvc", extras = ["gs"] },
     { name = "evidently" },
     { name = "fastapi" },
     { name = "feast", extras = ["gcp"] },
@@ -6849,10 +6739,8 @@ requires-dist = [
     { name = "optuna" },
     { name = "pandas" },
     { name = "pandera" },
-    { name = "pre-commit" },
     { name = "prometheus-client" },
     { name = "pyarrow" },
-    { name = "ruff" },
     { name = "scikit-learn" },
     { name = "tensorflow" },
     { name = "tsfresh" },
@@ -6865,7 +6753,10 @@ requires-dist = [
 dev = [
     { name = "dagster-dg-cli", specifier = ">=1.11.11" },
     { name = "dagster-webserver" },
+    { name = "dvc", extras = ["gs"] },
+    { name = "pre-commit" },
     { name = "pytest" },
+    { name = "ruff" },
 ]
 
 [[package]]

@@ -4,7 +4,6 @@ requires-python = ">=3.10,<3.15"
 version = "0.1.0"
 dependencies = [
     "dagster",
-    "dagster-cloud",
     "dagster-gcp",
     "dagster-gcp-pandas",
     "httpx",
@@ -35,9 +34,6 @@ dependencies = [
     "gunicorn", # production ASGI server
     "evidently", # data drift and prediction drift detection
     "prometheus-client", # exposing metrics for monitoring
-    "pre-commit", # git hooks for linting and formatting
-    "ruff", # linter and formatter
-    "dvc[gs]", # data version control with Google Cloud Storage support
     "yfinance",
 ]
 
@@ -55,6 +51,9 @@ dev = [
     "dagster-dg-cli>=1.11.11",
     "dagster-webserver",
     "pytest",
+    "pre-commit", # git hooks for linting and formatting
+    "ruff", # linter and formatter
+    "dvc[gs]", # data version control with Google Cloud Storage support
 ]
 
 [build-system]
