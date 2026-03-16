@@ -120,18 +120,9 @@ def training_dataset(
         f"Split sizes — train: {len(train_df)}, val: {len(val_df)}, test: {len(test_df)}"
     )
 
-    # --- Data sanity assertions before writing splits ---
-    # Note: target_return distribution sanity is checked by @asset_check
-    # training_target_range_check (non-blocking warn) after this asset runs.
-    # Inline checks here cover structural bugs only.
-
-    n_feature_cols = len([c for c in df.columns if c not in _EXCLUDE_COLS])
-    if n_feature_cols < 60:
-        raise ValueError(
-            f"Expected ≥60 feature columns, got {n_feature_cols}. "
-            "feature_logic.py may have changed or silver tables are missing columns."
-        )
-
+    # Data quality is enforced by @asset_check definitions in defs/checks/training_checks.py
+    # (training_feature_count_check, training_target_range_check, training_split_sizes_check).
+    # Inline hard-stop: empty splits mean there is literally nothing to train on.
     if train_df.empty or val_df.empty:
         raise ValueError(
             f"Train ({len(train_df)}) or val ({len(val_df)}) split is empty — "
