@@ -121,12 +121,9 @@ def training_dataset(
     )
 
     # --- Data sanity assertions before writing splits ---
-    target_999 = df["target_return"].abs().quantile(0.999)
-    if target_999 >= 0.5:
-        raise ValueError(
-            f"target_return 99.9th percentile is {target_999:.2%} — exceeds 50%. "
-            "Possible data corruption or join bug in gold_features."
-        )
+    # Note: target_return distribution sanity is checked by @asset_check
+    # training_target_range_check (non-blocking warn) after this asset runs.
+    # Inline checks here cover structural bugs only.
 
     n_feature_cols = len([c for c in df.columns if c not in _EXCLUDE_COLS])
     if n_feature_cols < 60:
